@@ -1,7 +1,9 @@
+import ImageFlipMeme from "@/types/image-flip-memes"
 import Meme from "@/types/meme"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 export default function Main() {
+  const [memeList, setMemeList] = useState<Array<ImageFlipMeme>>([])
   const [meme, setMeme] = useState<Meme>({
     topText: 'One does not simply',
     bottomText: 'Walk into Mordor',
@@ -13,13 +15,25 @@ export default function Main() {
     setMeme(prevMeme => ({ ...prevMeme, [name]: value }))
   }
 
+  useEffect(() => {
+    async function startFetching() {
+      const response = await fetch('/api/image-flip')
+      const data = await response.json()
+
+      setMemeList(data)
+    }
+
+    startFetching()
+  }, [])
+
   return (
     <main>
       <div className="form">
         <label>Top Text
           <input
             type="text"
-            placeholder={meme.topText}
+            placeholder="One does not simply"
+            value={meme.topText}
             name="topText"
             onChange={handleOnChange}
           />
@@ -28,7 +42,8 @@ export default function Main() {
         <label>Bottom Text
           <input
             type="text"
-            placeholder={meme.bottomText}
+            placeholder="learn React"
+            value={meme.bottomText}
             name="bottomText"
             onChange={handleOnChange}
           />
