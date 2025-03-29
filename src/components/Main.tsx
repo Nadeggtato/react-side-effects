@@ -15,12 +15,17 @@ export default function Main() {
     setMeme(prevMeme => ({ ...prevMeme, [name]: value }))
   }
 
+  function getNewImage() {
+    const index = Math.floor(Math.random() * memeList.length - 1)
+    setMeme(prevMeme => ({ ...prevMeme, imageUrl: memeList[index].url }))
+  }
+
   useEffect(() => {
     async function startFetching() {
       const response = await fetch('/api/image-flip')
       const data = await response.json()
 
-      setMemeList(data)
+      setMemeList(data.data)
     }
 
     startFetching()
@@ -48,7 +53,7 @@ export default function Main() {
             onChange={handleOnChange}
           />
         </label>
-        <button>Get a new meme image </button>
+        <button onClick={getNewImage}>Get a new meme image </button>
       </div>
       <div className="meme">
         <img src={meme.imageUrl}/>
